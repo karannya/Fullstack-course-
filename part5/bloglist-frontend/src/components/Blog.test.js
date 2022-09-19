@@ -64,7 +64,7 @@ describe('Blog renders', () => {
     await user1.click(button)
     expect(mockHandler.mock.calls).toHaveLength(2)
   })
-  test('<BlogForm /> updates parent state and calls onSubmit', async () => {
+  test('BlogForm  onSubmit', async () => {
     const createBlog = jest.fn()
     const user = userEvent.setup()
 

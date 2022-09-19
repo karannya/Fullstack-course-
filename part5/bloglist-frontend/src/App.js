@@ -68,14 +68,15 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
+        console.log(setErrorMessage)
         setErrorMessage({
-          text: `Blog '${returnedBlog.title}' by ${returnedBlog.author}`,
+          text: `Blog ${returnedBlog.title} by ${returnedBlog.author}`,
           type:'success'
 
         })
         setTimeout(() => {
           setErrorMessage(null)
-        }, 5000)
+        }, 3000)
       })
       .catch (error => {
         console.log(error)
@@ -115,6 +116,15 @@ const App = () => {
         .then(response => {
           console.log(response)
           setBlogs(blogs.filter(item => item.id !== present.id))
+        }).catch (error => {
+          console.log(error)
+          setErrorMessage({
+            text: 'You are not authorized to delete',
+            type:'error'
+          })
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
     }
   }
@@ -242,7 +252,7 @@ const App = () => {
   }
   return (
     <div>
-      {/* <Notification message={errorMessage} /> */}
+      <Notification message={errorMessage} />
       <h2>Blogs</h2>
       <p>{user.username} logged in
         <button type="button" onClick={handleLogout}>logout</button>
