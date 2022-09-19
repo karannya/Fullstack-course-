@@ -13,8 +13,6 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs)
 }) 
 
-  
-
 describe('Blogs which are present', () => {
   test('blogs are returned as json', async () => {
     await api
@@ -23,27 +21,84 @@ describe('Blogs which are present', () => {
       .expect('Content-Type', /application\/json/)
   }, 500000)
   
-  
   test('are all returned when using the /api/blogs route', async () => {
     const response = await api.get('/api/blogs')
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
+
   test('verifies that the unique identifier property of the blog posts "id"', async () => {
     const response = await api.get('/api/blogs')
     expect(response.body[0].id).toBeDefined()
   })
 })
+/* describe('Blogs with update', () => {
+  let token=null
+  beforeEach(async () => {
+    
+    await User.deleteMany({})
+    const passwordHash = await bcrypt.hash('pass123', 10)
+    const user = new User({ username: 'Emily', passwordHash })
+
+    await user.save()
+    const newUser = {
+      username: 'Emily',
+      //name: 'Harshad',
+      password: 'pass123',
+    }
+    
+    const res = await api
+      .post('/api/login')
+      .send(newUser)
+    
+    token = res.body.token
+    return token
+        
+  })
+  test('update the likes of the blog', async () => {
+    const newBlog = {
+      title: 'Blog with added likes',
+      author: 'Annya Kar',
+      url: 'http://www.blogapi.com',
+      likes:100
+    }
+  
+    const response = await api
+      .post('/api/blogs')
+      .set({ Authorization: `bearer ${token}` })
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    
+    const blogsAtStart = await helper.blogsInDb()
+    const updatedBlog = blogsAtStart[6]
+    
+    const updateLike=await api
+      .put(`/api/blogs/${updatedBlog.id}`)
+      .set({ Authorization: `bearer ${token}` })
+      .send({likes: 8})
+      .expect(200)
+    //.expect('Content-Type', /application\/json/)
+    const blogsAtEnd = await helper.blogsInDb()
+    console.log('blogsAtEnd',blogsAtEnd)
+  
+  
+    // console.log('updatedBlog',blogsAtEnd)
+    //expect(response).toHaveLength(helper.initialBlogs.length)
+
+    expect(updateLike.body.likes).toBe(8)
+  })
+}) */
 describe('addition of a new blog', () => {
   let token=null
   beforeEach(async () => {
     
     await User.deleteMany({})
     const passwordHash = await bcrypt.hash('pass123', 10)
-    const user = new User({ username: 'root', passwordHash })
+    const user = new User({ username: 'Emily', passwordHash })
 
     await user.save()
     const newUser = {
-      username: 'root',
+      username: 'Emily',
       //name: 'Harshad',
       password: 'pass123',
     }
@@ -119,6 +174,8 @@ describe('addition of a new blog', () => {
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
     expect(response.body.likes).toBe(0)
   })
+
+  
   test('fails with status code 400 if title is missing', async () => {
     const newBlog = {
       title: 'My blog title',
@@ -153,49 +210,70 @@ describe('addition of a new blog', () => {
   
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
   })
-})
-describe('Deletion of a blog', () => {
-  let token=null
-  beforeEach(async () => {
-    //await Blog.deleteMany({})
-    await User.deleteMany({})
-    const passwordHash = await bcrypt.hash('pass123', 10)
-    const user = new User({ username: 'root', passwordHash })
-
-    await user.save()
-    const newUser = {
-      username: 'root',
-      //name: 'Harshad',
-      password: 'pass123',
+    
+  test('Authorizedperson able to update the likes of a blog', async () => {
+    await Blog.deleteMany({})
+    const newBlog = {
+      title: 'Blog with added likes',
+      author: 'Annya Kar',
+      url: 'http://www.blogapi.com',
+      likes:100
     }
+  
+    const response = await api
+      .post('/api/blogs')
+      .set({ Authorization: `bearer ${token}` })
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
     
-    const res = await api
-      .post('/api/login')
-      .send(newUser)
-    
-    token = res.body.token
-    return token
-        
-  })
-   
-  test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
+    const updatedBlog = blogsAtStart[0]
     
-    const blogToDelete = blogsAtStart[0]
+    const updateLike=await api
+      .put(`/api/blogs/${updatedBlog.id}`)
+      .set({ Authorization: `bearer ${token}` })
+      .send({likes: 8})
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    
+    const blogsAtEnd = await helper.blogsInDb()
+    console.log('blogsAtEnd',blogsAtEnd)
+    
+    expect(blogsAtEnd).toHaveLength(1)
+    expect(updateLike.body.likes).toBe(8)
+  })
+
+  test('Authorizedperson able to delete a blog', async () => {
+    await Blog.deleteMany({})
+    const newBlog = {
+      title: 'Blog with added likes',
+      author: 'Annya Kar',
+      url: 'http://www.blogapi.com',
+      likes:50
+    }
+  
+    const response = await api
+      .post('/api/blogs')
+      .set({ Authorization: `bearer ${token}` })
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    
+    const blogsAtStart = await helper.blogsInDb()
+    const deleteBlog = blogsAtStart[0]
+    
     await api
-      .delete(`/api/blogs/${blogToDelete.id}`)
+      .delete(`/api/blogs/${deleteBlog.id}`)
       .set({ Authorization: `bearer ${token}` })
       .expect(204)
-  
+      
     const blogsAtEnd = await helper.blogsInDb()
-   
-  
-    expect(blogsAtEnd).toHaveLength(
-      helper.initialBlogs.length - 1
-    )
-    const titles = blogsAtEnd.map(r => r.title)
-    expect(titles).not.toContain(blogToDelete.title)
+    
+    expect(blogsAtStart).toHaveLength(1)
+    expect(blogsAtEnd).toHaveLength(0)
   })
+  
 })
 
 describe('when there is initially one user at db', () => {
