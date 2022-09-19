@@ -147,9 +147,15 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 app.put('/api/persons/:id', (req, res, next) => {
   const body = req.body
+  const matchNumber= /^\d{3}-\d{5}$|^\d{2}-\d{6}$/
   if (!body.number) {
     return res.status(400).json({
       error: 'The number is missing'
+    })
+  }
+  if (body.number.length < 8 || !body.number.match(matchNumber) ) {
+    return res.status(400).json({
+      error: 'The number is not in correct format xx-xxxxxx or xxx-xxxxx'
     })
   }
   const person = {
