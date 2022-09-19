@@ -1,24 +1,20 @@
-
 import { useState } from 'react';
-const Button=(props)=>{
-  return(
-  
-  <button onClick={props.onClick}>
-    {props.text}
+const Button = (props) => {
+  return (
+    <button onClick={props.onClick}>
+      {props.text}
     </button>
-   
-    )
-    
+  )
 }
-const MaximumVote=({anecdotes,points})=>{
- 
+
+const MaximumVote = ({ anecdotes, points }) => {
   //const maxKey=points.findIndex(maxValue)
-  let maxKey=points.indexOf(Math.max(...points))
-   return(
+  let maxKey = points.indexOf(Math.max(...points))
+  return (
     <div>
-   {anecdotes[maxKey]} has {points[maxKey]} vote
-   </div>
-  ) 
+      {anecdotes[maxKey]} <br /> has {points[maxKey]} vote
+    </div>
+  )
 }
 function App() {
   const anecdotes = [
@@ -31,30 +27,28 @@ function App() {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.'
   ]
   const [selected, setSelected] = useState(0)
-  const [points, setPoints] = useState(Array.apply(null, new Array(anecdotes.length)).fill(0)) 
-  const clickMe=()=>{
+  const [points, setPoints] = useState(Array.apply(null, new Array(anecdotes.length)).fill(0))
+  const clickMe = () => {
     let randomNumber = Math.floor(Math.random() * (anecdotes.length));
     setSelected(randomNumber)
-    
   }
-  const voteCount=()=>{
+  const voteCount = () => {
     let totalPoints = [...points]
     console.log(totalPoints)
     console.log(selected)
     totalPoints[selected] += 1
-   /* let a= Math.max(...totalPoints)
-    console.log('a',a) */
-    setPoints(totalPoints); 
-}
+    /* let a= Math.max(...totalPoints)
+     console.log('a',a) */
+    setPoints(totalPoints);
+  }
   return (
     <div>
-      
       <h1>Anecdote of the day</h1>
-      {anecdotes[selected]} has {points[selected]} votes <br />
-      <Button onClick={voteCount} text='vote'/>
-      <Button onClick={clickMe} text='next anecdote'/>
+      {anecdotes[selected]} <br /> has {points[selected]} votes <br />
+      <Button onClick={voteCount} text='vote' />
+      <Button onClick={clickMe} text='next anecdote' />
       <h1>Anecdote with most votes</h1>
-      <MaximumVote anecdotes={anecdotes} points={points} selected={selected}/>
+      <MaximumVote anecdotes={anecdotes} points={points} selected={selected} />
     </div>
   );
 }
