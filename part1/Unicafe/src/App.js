@@ -13,7 +13,7 @@ const Button = (props) => {
 // Calculate the total, avg, positive percentage of feedback
 const Statistics = ({ good, neutral, bad }) => {
   const all = good + neutral + bad;
-  const avg = good / 3;
+  const avg = ((good*1)+(neutral*0)+(bad* (-1)) )/ all;
   const positive = (good / all) * 100;
   if (all === 0) {
     return (

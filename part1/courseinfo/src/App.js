@@ -29,8 +29,8 @@ const Content = ({ parts }) => {
   )
 }
 
-const Total = (props) => {
-  let sum = props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises;
+const Total = ({parts}) => {
+  let sum = parts[0].exercises + parts[1].exercises + parts[2].exercises;
   return (
     <div>
       {sum}
