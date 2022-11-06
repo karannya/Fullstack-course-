@@ -29,8 +29,8 @@ function App() {
       .getAll()
       .then(newPerson => {
         setPersons(newPerson)
-        
-      })
+
+      }, [])
       .catch(error => {
         setErrorMessage({
           text: 'Error in fetching data from backend ',
@@ -43,7 +43,7 @@ function App() {
     // .catch((error) => console.error(error)); 
 
   }, [])
-  
+
   const addName = (event) => {
     event.preventDefault();
     const nameObject = {
@@ -51,35 +51,24 @@ function App() {
       number: newNumber,
       //id: Math.floor(Math.random() * 10000),
     }
-    
+
     const alertmessage = `${newName} is already added to phonebook, replace the old number with a new one?`
-    
-     //const present = persons.find(item => item.name === newName)
-     /* personsService
-     .getAll()
-     .then(newPerson => {
-       setPersons(newPerson)
-       console.log(persons.map(p=>p.name))
-     })
-       */
-      const present = persons.find(item => item.name === newName)
-   const updatedPerson = { ...present, number: newNumber };
+
+    const present = persons.find(item => item.name === newName)
+    const updatedPerson = { ...present, number: newNumber };
 
     if (present) {
-      
+
       alert(alertmessage)
-      console.log('updatedPerson',updatedPerson)
-     
-      //if(alertmessage){
-      //const updatedPerson = { ...present, number: newNumber };
-      //console.log('present',present.name)
-      //console.log(updatedPerson)
+      console.log('updatedPerson', updatedPerson)
+
+
       personsService
         .update(present.id, updatedPerson)
         .then(returnedPerson => {
-          console.log('returnedPerson',returnedPerson)
+          console.log('returnedPerson', returnedPerson)
           setPersons(persons.map(p => p.id !== present.id ? p : returnedPerson))
-         
+
           setErrorMessage({
             text: `Updated ${present.name} succeessfully `,
             type: 'success'
@@ -87,24 +76,8 @@ function App() {
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000)
-         
-          //setPersons(persons.map(p => p.id !== present.id ? p : persons))
-          /* setNewName('')
-          setNewNumber('') */
-          
         })
-        /* .catch((error) => {
-          setErrorMessage({
-            text: error.response.data.error,
-            type: "error",
-          });
-          console.error(error.response.data);
-          setTimeout(() => {
-            setErrorMessage(null);
-          }, 5000);
-        }); */
-        
-         .catch((error) => {
+        .catch((error) => {
           console.log(error)
           if (error.response.status === 404) {
             setErrorMessage({
@@ -113,39 +86,23 @@ function App() {
             });
             setTimeout(() => setErrorMessage(null)
               , 5000)
-              setPersons(persons.filter(n => n.name !== present.name))
-        } else{
-          setErrorMessage({
-            text: error.response.data.error,
-            type: "error",
-          });
-          console.error(error.response.data);
-          setTimeout(() => {
-            setErrorMessage(null);
-          }, 5000);
-        }
-        
-        }); 
-        setNewName('')
-        setNewNumber('')
-    }
-  
-    /*   personsService
-    .update(id, present)
-    .then(returnedNote => {
-      setNotes(notes.map(note => note.id !== id ? note : returnedNote))
-    })
-    .catch(error => {
-      alert(
-        `the note '${note.content}' was already deleted from server`
-      )
-      setNotes(notes.filter(n => n.id !== id))
-    }) */
-    // setNewName('')
-    //setNewNumber('') 
+            setPersons(persons.filter(n => n.name !== present.name))
+          } else {
+            setErrorMessage({
+              text: error.response.data.error,
+              type: "error",
+            });
+            console.error(error.response.data);
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000);
+          }
 
+        });
+      setNewName('')
+      setNewNumber('')
+    }
     else {
-      // setPersons(persons.concat(nameObject))
       personsService
         .create(nameObject)
         .then(returnedName => {
@@ -174,10 +131,6 @@ function App() {
 
       setNewName('')
       setNewNumber('')
-
-
-      /* setNewName('')
-      setNewNumber('') */
     }
   }
   const handleAddName = (event) => {
@@ -191,13 +144,13 @@ function App() {
     setFilter(event.target.value)
 
   }
- 
+
   const searchfilter = !filtered
     ? persons
     : persons.filter((item) =>
       item.name.toLowerCase().includes(filtered.toLowerCase())
     );
-    
+
   const deleteInfo = (id) => {
     //setPersons(persons.filter(person => person.id !== id))
     console.log(persons)
@@ -209,31 +162,31 @@ function App() {
       personsService
         .remove(id)
         .then(response => {
-          
+
           setPersons(persons.filter(person => person.id !== id))
-          
+
           setErrorMessage({
             text: `${personname.name} is removed from server`,
             type: 'success'
           });
           setTimeout(() => setErrorMessage(null)
-            , 5000); 
-          
+            , 5000);
+
         })
 
         .catch(error => {
           //console.log('error')
           console.log(error)
-         /*  setErrorMessage({
+          setErrorMessage({
             text: `'${personname.name}' has already been removed from server`,
             type: 'error'
           });
           setTimeout(() => setErrorMessage(null)
-            , 5000); */
-          //setPersons(persons.filter(person => person.id !== personname.id))
+            , 5000);
+          setPersons(persons.filter(person => person.id !== personname.id))
         })
 
-        
+
     }
   }
 
@@ -254,11 +207,11 @@ function App() {
         newNumber={newNumber} handleAddNumber={handleAddNumber} />
       <h2>Numbers</h2>
       <ul>
-      
-       {console.log(searchfilter,'searchfilter')}
+
+        {console.log(searchfilter, 'searchfilter')}
         {searchfilter.map(names =>
           <Persons key={names.id} names={names} deleteInfo={() => deleteInfo(names.id)} />
-        )} 
+        )}
 
       </ul>
     </div>
