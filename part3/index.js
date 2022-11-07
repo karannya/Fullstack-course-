@@ -79,7 +79,7 @@ app.get('/api/persons/:id', (req, res, next) => {
     })  */
     .catch(error => next(error))
 })
-app.get('/api/info', (req, res) => {
+app.get('/info', (req, res) => {
   const date = new Date().toString()
   personData.find({}).then(person =>{res.send(`Phonebook has info for ${person.length} people <br><br> ${date}`)})
 })
@@ -163,6 +163,11 @@ app.put('/api/persons/:id', (req, res, next) => {
     number: body.number
   }
   console.log('person', personData.name)
+  /*  if (person.number===body.number) {
+    return res.status(400).json({
+      error: 'The name already exists in the phonebook'
+    })
+  } */
   personData.findByIdAndUpdate(
     req.params.id,
     person,
@@ -173,6 +178,7 @@ app.put('/api/persons/:id', (req, res, next) => {
     })
     .catch(error => next(error))
 })
+
 const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'unknown endpoint' })
 }
