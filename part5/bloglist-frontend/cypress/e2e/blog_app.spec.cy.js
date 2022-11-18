@@ -17,15 +17,15 @@ describe('Blog app', function () {
     it('succeeds with correct credentials', function() {
       cy.get('#username').type('testAnnya')
       cy.get('#password').type('password123')
-      cy.get('#login-button').click()
+      cy.get('#login-btn').click()
       cy.contains('Annya logged in')
     })
 
     it('fails with wrong credentials', function() {
-      //cy.contains('login').click()
+
       cy.get('#username').type('password123')
       cy.get('#password').type('pass123')
-      cy.get('#login-button').click()
+      cy.get('#login-btn').click()
 
       cy.get('.error')
         .should('contain', 'Wrong username or password')
@@ -48,12 +48,6 @@ describe('Blog app', function () {
       cy.get('#title').type('Hello World')
       cy.get('#author').type('Annya Kar')
       cy.get('#url').type('www.testit.com')
-      /* cy.contains('create').click()
-      cy.createBlog({
-        title: 'Hello world test',
-        author: 'Annya Kar',
-        url: 'www.testit.com'
-      }) */
       cy.get('#create-button').click()
 
     })

@@ -39,13 +39,6 @@ describe('Blog renders', () => {
 
     const likes = screen.queryByText('10')
     expect(likes).toBeDefined()
-    /* const user = userEvent.setup()
-    const button = screen.getByText('view')
-    await user.click(button)
-    const { container } =render(<Blog blog={blog}/>)
-
-    const data = container.querySelector('.show')
-    expect(data).toHaveTextContent('The test data','Rehan sharma','https://testapp.com','10') */
   })
   test('like button is clicked twice,',  async() => {
 
