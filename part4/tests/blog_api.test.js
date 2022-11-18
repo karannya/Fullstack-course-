@@ -14,14 +14,14 @@ beforeEach(async () => {
 }) 
 
 describe('Blogs which are present', () => {
-  test('blogs are returned as json', async () => {
+  test('blogs are returned as json, HTTP GET request', async () => {
     await api
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/)
   }, 500000)
   
-  test('are all returned when using the /api/blogs route', async () => {
+  test('All returned when using the /api/blogs route', async () => {
     const response = await api.get('/api/blogs')
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
@@ -31,64 +31,8 @@ describe('Blogs which are present', () => {
     expect(response.body[0].id).toBeDefined()
   })
 })
-/* describe('Blogs with update', () => {
-  let token=null
-  beforeEach(async () => {
-    
-    await User.deleteMany({})
-    const passwordHash = await bcrypt.hash('pass123', 10)
-    const user = new User({ username: 'Emily', passwordHash })
 
-    await user.save()
-    const newUser = {
-      username: 'Emily',
-      //name: 'Harshad',
-      password: 'pass123',
-    }
-    
-    const res = await api
-      .post('/api/login')
-      .send(newUser)
-    
-    token = res.body.token
-    return token
-        
-  })
-  test('update the likes of the blog', async () => {
-    const newBlog = {
-      title: 'Blog with added likes',
-      author: 'Annya Kar',
-      url: 'http://www.blogapi.com',
-      likes:100
-    }
-  
-    const response = await api
-      .post('/api/blogs')
-      .set({ Authorization: `bearer ${token}` })
-      .send(newBlog)
-      .expect(201)
-      .expect('Content-Type', /application\/json/)
-    
-    const blogsAtStart = await helper.blogsInDb()
-    const updatedBlog = blogsAtStart[6]
-    
-    const updateLike=await api
-      .put(`/api/blogs/${updatedBlog.id}`)
-      .set({ Authorization: `bearer ${token}` })
-      .send({likes: 8})
-      .expect(200)
-    //.expect('Content-Type', /application\/json/)
-    const blogsAtEnd = await helper.blogsInDb()
-    console.log('blogsAtEnd',blogsAtEnd)
-  
-  
-    // console.log('updatedBlog',blogsAtEnd)
-    //expect(response).toHaveLength(helper.initialBlogs.length)
-
-    expect(updateLike.body.likes).toBe(8)
-  })
-}) */
-describe('addition of a new blog', () => {
+describe('addition of a new blog, HTTP POST request to the /api/blogs url', () => {
   let token=null
   beforeEach(async () => {
     

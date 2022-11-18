@@ -35,14 +35,7 @@ const mostBlogs = (blogs) => {
   var output = Object.entries(result).map(([author, blogs]) => ({author,blogs}))
   const obj = Object.fromEntries(output.flatMap(Object.entries))
   return obj  
-  //const Maxblogs=Object.entries(authorsCount).reduce((a, b) => authorsCount[a] > authorsCount[b] ? a : b)
-  //const [author, blogs] = aa;
-  //const yourObject = { author, blogs }
-  /* const MaxblogsAuthor = {
-    author: Maxblogs[0],
-    blogs: Maxblogs[1],
-  }
-  return MaxblogsAuthor */    
+   
 }
 const mostLikes = (blogs) => {
   var authorsCount = blogs.reduce(function(res, obj) {
